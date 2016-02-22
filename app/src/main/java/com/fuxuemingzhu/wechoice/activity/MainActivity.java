@@ -38,10 +38,12 @@ public class MainActivity extends BaseActivity {
     private ListAdapter listAdapter;
 
     private MaterialRefreshLayout materialRefreshLayout;
-    private int pages = 1;
+    private int refreshPages = 1;
+    private int morePages = 0;
     final int QUEUE_SIZE = 10;//队列大小
     //手写队列用来存储已经加载过的文章页数
-    Queue<Integer> autoQueue = new LinkedList<>();
+    Queue<Integer> refreshQueue = new LinkedList<>();
+    Queue<Integer> moreQueue = new LinkedList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,22 +61,25 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initEvents() {
-        getStringContent();
         materialRefreshLayout.setLoadMore(true);
         materialRefreshLayout.finishRefreshLoadMore();
         materialRefreshLayout.setMaterialRefreshListener(new MaterialRefreshListener() {
             @Override
             public void onRefresh(final MaterialRefreshLayout materialRefreshLayout) {
-                while (autoQueue.contains(pages)) {
-                    pages = (int) Math.ceil(Math.random() * 25);
+                while (refreshQueue.contains(refreshPages)) {
+                    refreshPages = (int) Math.ceil(Math.random() * 25);
                 }
-                getStringContent();
+                getFreshContent();
             }
 
             @Override
             public void onRefreshLoadMore(MaterialRefreshLayout materialRefreshLayout) {
                 super.onRefreshLoadMore(materialRefreshLayout);
-                showCustomToast("onRefreshLoadMore");
+
+                while (moreQueue.contains(morePages)) {
+                    morePages = (int) Math.ceil(Math.random() * 25);
+                }
+                getMoreContent();
             }
 
             @Override
@@ -82,33 +87,35 @@ public class MainActivity extends BaseActivity {
                 super.onfinish();
             }
         });
-
+        materialRefreshLayout.autoRefresh();//drop-down refresh automatically
     }
 
-    private void getStringContent() {
-        if (autoQueue.size() == QUEUE_SIZE) {
-            autoQueue.poll();
+    private void getFreshContent() {
+        if (refreshQueue.size() == QUEUE_SIZE) {
+            refreshQueue.poll();
         }
-        autoQueue.offer(pages);
-        Logcat.i("autoQueue", autoQueue.toString());
+        refreshQueue.offer(refreshPages);
+        moreQueue.clear();
+        moreQueue.offer(refreshPages);
+        Logcat.i("refreshQueue", refreshQueue.toString());
         OkHttpUtils
                 .get()
                 .url(url)
-                .addParams("pno", Integer.toString(pages))
+                .addParams("pno", Integer.toString(refreshPages))
                 .addParams("key", APPKEY)
                 .build()
                 .execute(new StringCallback() {
                     @Override
                     public void onError(Call call, Exception e) {
                         materialRefreshLayout.finishRefresh();
-                        Toast.makeText(MainActivity.this, e.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "网络异常，请稍后重试", Toast.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onResponse(String response) {
                         materialRefreshLayout.finishRefresh();
                         if (response == null) {
-                            Toast.makeText(MainActivity.this, "response is null", Toast.LENGTH_LONG)
+                            Toast.makeText(MainActivity.this, "网络异常，请稍后重试", Toast.LENGTH_LONG)
                                     .show();
                             return;
                         }
@@ -116,6 +123,66 @@ public class MainActivity extends BaseActivity {
                         JSONObject result = responseJson.getJSONObject("result");
                         JSONArray jsonList = result.getJSONArray("list");
                         listChoice.clear();
+                        for (int i = 0; i < jsonList.size(); i++) {
+                            JSONObject choiceJson = jsonList.getJSONObject(i);
+                            Choice choice = JSON.parseObject(choiceJson.toJSONString(), Choice.class);
+                            listChoice.add(choice);
+                        }
+                        String listString = "";
+                        for (int i = 0; i < listChoice.size(); i++) {
+                            listString += listChoice.get(i).toString();
+                        }
+                        listAdapter = new ChoiceAdapter(MainActivity.this, listChoice);
+                        lv_choices.setAdapter(listAdapter);
+                        lv_choices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                Bundle data = new Bundle();
+                                data.putString("url", listChoice.get(i).getUrl());
+                                // 创建一个Intent
+                                Intent intent = new Intent(MainActivity.this,
+                                        ContentActivity.class);
+                                intent.putExtras(data);
+                                // 启动intent对应的Activity
+                                startActivity(intent);
+                            }
+                        });
+                        Logcat.i("response", listString);
+                    }
+                });
+    }
+
+    private void getMoreContent() {
+        if (moreQueue.size() == 25) {
+            moreQueue.clear();
+            moreQueue.offer(refreshPages);
+        }
+        moreQueue.offer(morePages);
+        Logcat.i("moreQueue", moreQueue.toString());
+        OkHttpUtils
+                .get()
+                .url(url)
+                .addParams("pno", Integer.toString(morePages))
+                .addParams("key", APPKEY)
+                .build()
+                .execute(new StringCallback() {
+                    @Override
+                    public void onError(Call call, Exception e) {
+                        materialRefreshLayout.finishRefreshLoadMore();
+                        Toast.makeText(MainActivity.this, "网络异常，请稍后重试", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onResponse(String response) {
+                        materialRefreshLayout.finishRefreshLoadMore();
+                        if (response == null) {
+                            Toast.makeText(MainActivity.this, "网络异常，请稍后重试", Toast.LENGTH_LONG)
+                                    .show();
+                            return;
+                        }
+                        JSONObject responseJson = JSON.parseObject(response);
+                        JSONObject result = responseJson.getJSONObject("result");
+                        JSONArray jsonList = result.getJSONArray("list");
                         for (int i = 0; i < jsonList.size(); i++) {
                             JSONObject choiceJson = jsonList.getJSONObject(i);
                             Choice choice = JSON.parseObject(choiceJson.toJSONString(), Choice.class);
