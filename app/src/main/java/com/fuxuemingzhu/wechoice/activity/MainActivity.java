@@ -2,7 +2,6 @@ package com.fuxuemingzhu.wechoice.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
@@ -18,6 +17,7 @@ import com.fuxuemingzhu.wechoice.R;
 import com.fuxuemingzhu.wechoice.adapter.ChoiceAdapter;
 import com.fuxuemingzhu.wechoice.app.BaseActivity;
 import com.fuxuemingzhu.wechoice.entity.Choice;
+import com.fuxuemingzhu.wechoice.utils.Logcat;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
@@ -90,7 +90,7 @@ public class MainActivity extends BaseActivity {
             autoQueue.poll();
         }
         autoQueue.offer(pages);
-        Log.i("autoQueue", autoQueue.toString());
+        Logcat.i("autoQueue", autoQueue.toString());
         OkHttpUtils
                 .get()
                 .url(url)
@@ -140,7 +140,7 @@ public class MainActivity extends BaseActivity {
                                 startActivity(intent);
                             }
                         });
-                        Log.i("response", listString);
+                        Logcat.i("response", listString);
                     }
                 });
     }
