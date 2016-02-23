@@ -1,24 +1,34 @@
 package com.fuxuemingzhu.wechoice.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.http.SslError;
 import android.os.Bundle;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.RelativeLayout;
+import android.view.View;
+import android.webkit.*;
+import android.widget.LinearLayout;
 
 import com.fuxuemingzhu.wechoice.R;
 import com.fuxuemingzhu.wechoice.app.BaseActivity;
+import com.fuxuemingzhu.wechoice.utils.Logcat;
+
+import java.util.Calendar;
+
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 public class ContentActivity extends BaseActivity {
     private String title;
     private String number;
 
     WebView webview = null;
-    RelativeLayout rl_common_bar = null;
+
     String url;
 
+    private LinearLayout ll_common_error_page = null;
+    SmoothProgressBar progressBar = null;
 
     private Bundle data;
 
@@ -39,23 +49,47 @@ public class ContentActivity extends BaseActivity {
 
 
         initEvents();
-        initWeb();
+        loadWeb();
     }
 
     @Override
     protected void initViews() {
         webview = (WebView) findViewById(R.id.wb_common);
+        ll_common_error_page = (LinearLayout) findViewById(R.id.ll_common_error_page);
+        progressBar = (SmoothProgressBar) findViewById(R.id.pb_content_above);
 
     }
 
     @Override
     protected void initEvents() {
-
+        ll_common_error_page.setOnClickListener(new NoDoubleClickListener() {
+            @Override
+            public void onNoDoubleClick(View v) {
+                loadWeb();
+            }
+        });
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     protected void initWeb() {
         webview.setWebViewClient(new myWebViewClient());
+        webview.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onProgressChanged(WebView view, int progress) {
+                if (progress == 100) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                } else if (ll_common_error_page.getVisibility() == View.VISIBLE
+                        && progress >= 50) {
+                    hideErrorPage();
+                } else {
+
+                    if (progressBar.getVisibility() == View.INVISIBLE) {
+                        progressBar.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+
+        });
         // 支持缩放
         WebSettings websettings = webview.getSettings();
         websettings.setBuiltInZoomControls(true);
@@ -74,13 +108,63 @@ public class ContentActivity extends BaseActivity {
         webview.loadUrl(url);
     }
 
+    private void loadWeb() {
+        if (isOnline()) {
+            initWeb();
+        } else {
+            showErrorPage();
+        }
+    }
 
     private class myWebViewClient extends WebViewClient {
         @Override
-        public void onReceivedError(WebView view, int errorCode,
-                                    String description, String failingUrl) {
+        public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
             showErrorPage();
-            super.onReceivedError(view, errorCode, description, failingUrl);
+            super.onReceivedHttpError(view, request, errorResponse);
+        }
+
+        @Override
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            showErrorPage();
+            super.onReceivedSslError(view, handler, error);
+        }
+
+        @Override
+        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+            Logcat.i("WEB_VIEW_TEST", "error code:" + error);
+            showErrorPage();
+            super.onReceivedError(view, request, error);
+        }
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getBaseContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo i = cm.getActiveNetworkInfo();
+        if ((i == null) || (!i.isConnected())) {
+            Logcat.i("network info", "Error: No connection to Internet");
+            return false;
+        }
+        return true;
+    }
+
+    public abstract class NoDoubleClickListener implements View.OnClickListener {
+
+        public static final int MIN_CLICK_DELAY_TIME = 500;
+        private long lastClickTime = 0;
+
+        public abstract void onNoDoubleClick(View v);
+
+        @Override
+        public void onClick(View v) {
+            long currentTime = Calendar.getInstance().getTimeInMillis();
+            if (currentTime - lastClickTime > MIN_CLICK_DELAY_TIME) {
+                lastClickTime = currentTime;
+                onNoDoubleClick(v);
+            } else {
+                Logcat.i("click", "on double click.");
+            }
         }
     }
 
@@ -89,11 +173,11 @@ public class ContentActivity extends BaseActivity {
      */
     protected void showErrorPage() {
 
-        //ll_common_error_page.setVisibility(View.VISIBLE);
+        ll_common_error_page.setVisibility(View.VISIBLE);
 
     }
 
     protected void hideErrorPage() {
-        //ll_common_error_page.setVisibility(View.INVISIBLE);
+        ll_common_error_page.setVisibility(View.INVISIBLE);
     }
 }

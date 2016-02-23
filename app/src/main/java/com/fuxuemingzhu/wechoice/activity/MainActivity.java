@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -119,15 +118,14 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void onError(Call call, Exception e) {
                         materialRefreshLayout.finishRefresh();
-                        Toast.makeText(MainActivity.this, "网络异常，请稍后重试", Toast.LENGTH_LONG).show();
+                        MainActivity.this.showCustomToast("网络异常，请稍后重试");
                     }
 
                     @Override
                     public void onResponse(String response) {
                         materialRefreshLayout.finishRefresh();
                         if (response == null) {
-                            Toast.makeText(MainActivity.this, "网络异常，请稍后重试", Toast.LENGTH_LONG)
-                                    .show();
+                            MainActivity.this.showCustomToast("网络异常，请稍后重试");
                             return;
                         }
                         AppData.getInstance(MainActivity.this).setDefaultContent(response);
@@ -193,15 +191,14 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void onError(Call call, Exception e) {
                         materialRefreshLayout.finishRefreshLoadMore();
-                        Toast.makeText(MainActivity.this, "网络异常，请稍后重试", Toast.LENGTH_LONG).show();
+                        MainActivity.this.showCustomToast("网络异常，请稍后重试");
                     }
 
                     @Override
                     public void onResponse(String response) {
                         materialRefreshLayout.finishRefreshLoadMore();
                         if (response == null) {
-                            Toast.makeText(MainActivity.this, "网络异常，请稍后重试", Toast.LENGTH_LONG)
-                                    .show();
+                            MainActivity.this.showCustomToast("网络异常，请稍后重试");
                             return;
                         }
                         JSONObject responseJson = JSON.parseObject(response);
