@@ -16,7 +16,7 @@ public class AppData {
 
     private static AppData mInstance;
 
-    public static final boolean IS_DEBUG = true;
+    public static final boolean IS_DEBUG = false;
     public static final String COMPANY_PROJECT_NAMESPACE = "com.fuxuemingzhu.wechoice";
     private static final String KEY_SHOW_WELCOME = "isFirstRun";
     public static SharedPreferences spf;
