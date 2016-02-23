@@ -1,11 +1,13 @@
 package com.fuxuemingzhu.wechoice.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -34,12 +36,14 @@ public class MainActivity extends BaseActivity {
     private static String APPKEY = "d7bbe8531dc5a69516334aaafd698d98";
     private List<Choice> listChoice = new ArrayList<>();
 
+    private RelativeLayout ll_load_more;
+
     private ListView lv_choices;
-    private ListAdapter listAdapter;
+    private ChoiceAdapter listAdapter;
 
     private MaterialRefreshLayout materialRefreshLayout;
     private int refreshPages = 1;
-    private int morePages = 0;
+    private int morePages = 1;
     final int QUEUE_SIZE = 10;//队列大小
     //手写队列用来存储已经加载过的文章页数
     Queue<Integer> refreshQueue = new LinkedList<>();
@@ -57,6 +61,11 @@ public class MainActivity extends BaseActivity {
     protected void initViews() {
         lv_choices = (ListView) findViewById(R.id.lv_main_choices);
         materialRefreshLayout = (MaterialRefreshLayout) findViewById(R.id.refresh_main);
+        ll_load_more = (RelativeLayout) ((LayoutInflater) this.getSystemService(Context
+                .LAYOUT_INFLATER_SERVICE)).inflate(R
+                .layout.foot_more, null, false);
+        lv_choices.addFooterView(ll_load_more);
+
     }
 
     @Override
@@ -192,21 +201,7 @@ public class MainActivity extends BaseActivity {
                         for (int i = 0; i < listChoice.size(); i++) {
                             listString += listChoice.get(i).toString();
                         }
-                        listAdapter = new ChoiceAdapter(MainActivity.this, listChoice);
-                        lv_choices.setAdapter(listAdapter);
-                        lv_choices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                Bundle data = new Bundle();
-                                data.putString("url", listChoice.get(i).getUrl());
-                                // 创建一个Intent
-                                Intent intent = new Intent(MainActivity.this,
-                                        ContentActivity.class);
-                                intent.putExtras(data);
-                                // 启动intent对应的Activity
-                                startActivity(intent);
-                            }
-                        });
+                        listAdapter.notifyDataSetChanged();
                         Logcat.i("response", listString);
                     }
                 });

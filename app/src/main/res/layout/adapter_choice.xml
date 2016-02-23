@@ -11,7 +11,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="70dp"
             android:layout_alignParentLeft="false"
             android:layout_margin="5dp"
             android:layout_marginRight="60dp"
@@ -22,6 +22,9 @@
                 android:id="@+id/tv_adapter_choice_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:singleLine="false"
                 android:text="Medium Text"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/black"
@@ -64,8 +67,8 @@
 
             <ImageView
                 android:id="@+id/iv_adapter_choice_image"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:scaleType="centerCrop"
                 android:src="@mipmap/ic_launcher"/>
         </LinearLayout>

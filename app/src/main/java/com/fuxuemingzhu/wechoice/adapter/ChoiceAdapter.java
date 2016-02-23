@@ -12,6 +12,7 @@ import com.fuxuemingzhu.wechoice.R;
 import com.fuxuemingzhu.wechoice.entity.Choice;
 import com.squareup.picasso.Picasso;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -72,7 +73,11 @@ public class ChoiceAdapter extends BaseAdapter {
         view.setTag(viewHolder);
         viewHolder.title.setText(list.get(i).getTitle());
         viewHolder.source.setText(list.get(i).getSource());
-        viewHolder.read.setText("" + 1000);
+        if (list.get(i).getId().length() >= 15) {
+            viewHolder.read.setText(list.get(i).getId().substring(7, 15));
+        } else {
+            viewHolder.read.setText(Calendar.getInstance().getTime().toString());
+        }
         if (list.get(i).getFirstImg() != null && !list.get(i).getFirstImg().equals("")) {
             Picasso.with(context).load(list.get(i).getFirstImg())
                     .into(viewHolder.image);
