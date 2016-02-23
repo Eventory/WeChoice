@@ -17,6 +17,7 @@ import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
 import com.fuxuemingzhu.wechoice.R;
 import com.fuxuemingzhu.wechoice.adapter.ChoiceAdapter;
+import com.fuxuemingzhu.wechoice.app.AppData;
 import com.fuxuemingzhu.wechoice.app.BaseActivity;
 import com.fuxuemingzhu.wechoice.entity.Choice;
 import com.fuxuemingzhu.wechoice.utils.Logcat;
@@ -55,6 +56,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         initViews();
         initEvents();
+        displayDefaultContent();
     }
 
     @Override
@@ -128,37 +130,50 @@ public class MainActivity extends BaseActivity {
                                     .show();
                             return;
                         }
-                        JSONObject responseJson = JSON.parseObject(response);
-                        JSONObject result = responseJson.getJSONObject("result");
-                        JSONArray jsonList = result.getJSONArray("list");
-                        listChoice.clear();
-                        for (int i = 0; i < jsonList.size(); i++) {
-                            JSONObject choiceJson = jsonList.getJSONObject(i);
-                            Choice choice = JSON.parseObject(choiceJson.toJSONString(), Choice.class);
-                            listChoice.add(choice);
-                        }
-                        String listString = "";
-                        for (int i = 0; i < listChoice.size(); i++) {
-                            listString += listChoice.get(i).toString();
-                        }
-                        listAdapter = new ChoiceAdapter(MainActivity.this, listChoice);
-                        lv_choices.setAdapter(listAdapter);
-                        lv_choices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                Bundle data = new Bundle();
-                                data.putString("url", listChoice.get(i).getUrl());
-                                // 创建一个Intent
-                                Intent intent = new Intent(MainActivity.this,
-                                        ContentActivity.class);
-                                intent.putExtras(data);
-                                // 启动intent对应的Activity
-                                startActivity(intent);
-                            }
-                        });
-                        Logcat.i("response", listString);
+                        AppData.getInstance(MainActivity.this).setDefaultContent(response);
+                        displayContent(response);
                     }
                 });
+    }
+
+    private void displayContent(String response) {
+        JSONObject responseJson = JSON.parseObject(response);
+        JSONObject result = responseJson.getJSONObject("result");
+        JSONArray jsonList = result.getJSONArray("list");
+        listChoice.clear();
+        for (int i = 0; i < jsonList.size(); i++) {
+            JSONObject choiceJson = jsonList.getJSONObject(i);
+            Choice choice = JSON.parseObject(choiceJson.toJSONString(), Choice.class);
+            listChoice.add(choice);
+        }
+        String listString = "";
+        for (int i = 0; i < listChoice.size(); i++) {
+            listString += listChoice.get(i).toString();
+        }
+        listAdapter = new ChoiceAdapter(MainActivity.this, listChoice);
+        lv_choices.setAdapter(listAdapter);
+        lv_choices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Bundle data = new Bundle();
+                data.putString("url", listChoice.get(i).getUrl());
+                // 创建一个Intent
+                Intent intent = new Intent(MainActivity.this,
+                        ContentActivity.class);
+                intent.putExtras(data);
+                // 启动intent对应的Activity
+                startActivity(intent);
+            }
+        });
+        Logcat.i("response", listString);
+    }
+
+    private void displayDefaultContent() {
+        String defaultResponse = AppData.getInstance(this).getDefaultContent();
+        if (defaultResponse != null && !defaultResponse
+                .equals("")) {
+            displayContent(defaultResponse);
+        }
     }
 
     private void getMoreContent() {

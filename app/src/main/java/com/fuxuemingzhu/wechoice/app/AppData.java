@@ -16,9 +16,10 @@ public class AppData {
 
     private static AppData mInstance;
 
-    public static final boolean IS_DEBUG = false;
+    public static final boolean IS_DEBUG = true;
     public static final String COMPANY_PROJECT_NAMESPACE = "com.fuxuemingzhu.wechoice";
     private static final String KEY_SHOW_WELCOME = "isFirstRun";
+    private static final String DEFAULT_CONTENT = "default_content";
     public static SharedPreferences spf;
     public static Editor editor;
 
@@ -116,7 +117,17 @@ public class AppData {
     public void disableFirstRun() {
         Editor editor = spf.edit();
         editor.putBoolean(KEY_SHOW_WELCOME, false);
-        editor.commit();
+        editor.apply();
+    }
+
+    public String getDefaultContent() {
+        return spf.getString(DEFAULT_CONTENT, "");
+    }
+
+    public void setDefaultContent(String defaultContent) {
+        Editor editor = spf.edit();
+        editor.putString(DEFAULT_CONTENT, defaultContent);
+        editor.apply();
     }
 
     public static boolean getIsDebug() {
