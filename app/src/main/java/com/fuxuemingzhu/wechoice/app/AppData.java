@@ -64,7 +64,6 @@ public class AppData {
      *
      * @param key void
      *
-     * @throws
      * @since 1.0.0
      */
     public static void saveData(String key, boolean value) {
@@ -92,7 +91,6 @@ public class AppData {
      *
      * @return boolean
      *
-     * @throws
      * @since 1.0.0
      */
     public static boolean getBoolean(String key, boolean defaultValue) {

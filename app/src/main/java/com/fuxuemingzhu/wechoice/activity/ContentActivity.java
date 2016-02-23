@@ -76,9 +76,7 @@ public class ContentActivity extends BaseActivity {
         webview.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onProgressChanged(WebView view, int progress) {
-                if (progress == 100) {
-                    progressBar.setVisibility(View.INVISIBLE);
-                } else if (ll_common_error_page.getVisibility() == View.VISIBLE
+                if (ll_common_error_page.getVisibility() == View.VISIBLE
                         && progress >= 50) {
                     hideErrorPage();
                 } else {
@@ -134,6 +132,12 @@ public class ContentActivity extends BaseActivity {
             Logcat.i("WEB_VIEW_TEST", "error code:" + error);
             showErrorPage();
             super.onReceivedError(view, request, error);
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            progressBar.setVisibility(View.INVISIBLE);
         }
     }
 
