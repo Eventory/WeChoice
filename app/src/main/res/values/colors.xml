@@ -137,4 +137,9 @@
     <color name="holo_green_dark">#669900</color>
     <color name="holo_purple_dark">#9933cc</color>
     <color name="holo_red_dark">#cc0000</color>
+
+    <color name="orange">#25A55F</color>
+    <color name="orange_dark">#25A55F</color>
+    <color name="orange_accent">#9BDF46</color>
+    <color name="whiteTrans80">#AFFF</color>
 </resources>

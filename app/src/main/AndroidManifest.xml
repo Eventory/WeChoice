@@ -7,20 +7,25 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
     <application
+        android:name=".app.APP"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity">
+        <meta-data
+            android:name="MODEL"
+            android:value="com.fuxuemingzhu.wechoice.model.ChoiceModel"/>
+
+        <activity android:name=".module.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ContentActivity">
-        </activity>
+        <activity android:name=".module.content.ContentActivity"/>
+        <activity android:name=".module.setting.AboutUsActivity"/>
     </application>
 
 </manifest>

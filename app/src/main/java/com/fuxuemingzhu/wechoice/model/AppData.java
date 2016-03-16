@@ -1,4 +1,4 @@
-package com.fuxuemingzhu.wechoice.app;
+package com.fuxuemingzhu.wechoice.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -1,9 +1,9 @@
-package com.fuxuemingzhu.wechoice.entity;
+package com.fuxuemingzhu.wechoice.model.bean;
 
 import com.alibaba.fastjson.JSON;
 
 /**
- * 包名：com.fuxuemingzhu.wechoice.entity
+ * 包名：com.fuxuemingzhu.wechoice.model.entity
  * 类描述：
  * 创建人：fuxuemingzhu
  * 邮箱：fuxuemingzhu@163.com

@@ -2,7 +2,7 @@ package com.fuxuemingzhu.wechoice.utils;
 
 import android.util.Log;
 
-import com.fuxuemingzhu.wechoice.app.AppData;
+import com.fuxuemingzhu.wechoice.model.AppData;
 
 
 /**
