@@ -8,8 +8,11 @@ MVP模式 + Material Design。
 
 下载地址：
 
-[http://fir.im/b4zp](http://fir.im/b4zp)
+FIR.im:[http://fir.im/b4zp](http://fir.im/b4zp)
 
+二维码：
+
+FIR.im:![](https://github.com/fuxuemingzhu/fuxuemingzhu.github.io/blob/master/images/WeChoice/fir.png?raw=true)
 
 ##　Screenshot
 
