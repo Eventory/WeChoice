@@ -29,7 +29,6 @@
 
         <android.support.v7.widget.Toolbar
             style="@style/ToolBarStyle"
-            app:layout_scrollFlags="scroll|enterAlways"
             >
         </android.support.v7.widget.Toolbar>
 
