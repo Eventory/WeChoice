@@ -24,7 +24,7 @@ public class ChoiceModel extends AbsModel {
 
     public void getChoice(int page, DataCallback callback) {
         RequestMap map = new RequestMap();
-        map.put("key", "d7bbe8531dc5a69516334aaafd698d98");
+        map.put("key", "YOUR_JUHE_KEY");
         map.put("pno", page + "");
         RequestManager.getInstance().post(API.URL.CHOICE_URL, map, callback);
     }

@@ -3,6 +3,7 @@ package com.fuxuemingzhu.wechoice.app;
 import android.app.Application;
 
 import com.fuxuemingzhu.wechoice.BuildConfig;
+import com.fuxuemingzhu.wechoice.model.MyActivityLifeCycleDelegate;
 import com.jude.beam.Beam;
 import com.jude.http.RequestManager;
 import com.jude.utils.JUtils;
@@ -20,5 +21,6 @@ public class APP extends Application {
         RequestManager.getInstance().init(this);
         RequestManager.getInstance().setDebugMode(BuildConfig.DEBUG, "ChoiceNet");
         Beam.init(this);
+        Beam.setActivityLifeCycleDelegateProvider(MyActivityLifeCycleDelegate::new);
     }
 }

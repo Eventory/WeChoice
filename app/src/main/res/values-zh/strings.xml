@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="UMUpdateCheck">2.7.0.0.20160201</string>
+    <string name="app_name">微信精选</string>
+    <string name="tb_munion_tip_download_prefix">正在下载:</string>
+    <string name="umeng_common_icon">icon</string>
+</resources>

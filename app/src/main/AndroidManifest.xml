@@ -3,8 +3,11 @@
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <application
         android:name=".app.APP"
@@ -16,7 +19,22 @@
         <meta-data
             android:name="MODEL"
             android:value="com.fuxuemingzhu.wechoice.model.ChoiceModel"/>
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="YOUR_KEY"/>
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="Main Channel"/>
 
+        <service
+            android:name="com.umeng.update.net.DownloadingService"
+            android:process=":DownloadingService">
+        </service>
+
+        <activity
+            android:name="com.umeng.update.UpdateDialogActivity"
+            android:theme="@style/AppThemeDark">
+        </activity>
         <activity android:name=".module.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

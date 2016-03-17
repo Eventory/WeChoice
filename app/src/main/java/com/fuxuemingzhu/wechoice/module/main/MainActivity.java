@@ -16,6 +16,7 @@ import com.fuxuemingzhu.wechoice.module.setting.AboutUsActivity;
 import com.jude.beam.bijection.BeamFragment;
 import com.jude.beam.bijection.RequiresPresenter;
 import com.jude.beam.expansion.BeamBaseActivity;
+import com.umeng.update.UmengUpdateAgent;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -43,6 +44,8 @@ public class MainActivity extends BeamBaseActivity<MainPresenter> {
 
 
         addFragment(new ChoiceFragment());
+
+        UmengUpdateAgent.update(this);
 
     }
 
