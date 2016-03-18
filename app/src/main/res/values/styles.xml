@@ -9,7 +9,7 @@
     </style>
 
     <style name="AppTheme" parent="AppTheme.Base">
-
+        <item name="windowActionModeOverlay">true</item>
     </style>
 
 
