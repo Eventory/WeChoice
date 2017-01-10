@@ -6,6 +6,8 @@ MVP模式 + Material Design。
 
 ![](https://github.com/fuxuemingzhu/fuxuemingzhu.github.io/blob/master/images/WeChoice/ic_launcher_144.png?raw=true)
 
+开发过程讲解博客：[http://blog.csdn.net/fuxuemingzhu/article/details/54315899](http://blog.csdn.net/fuxuemingzhu/article/details/54315899)
+
 下载地址：
 
 FIR.im:[http://fir.im/b4zp](http://fir.im/b4zp)
